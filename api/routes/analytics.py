@@ -1,20 +1,20 @@
 from fastapi import APIRouter
-from repositories import cassandra_repo, neo4j_repo
+from services import analytics_service
 
 router = APIRouter(prefix="/analytics", tags=["Analytics"])
 
 @router.get("/trending")
 def trending_posts():
-    return cassandra_repo.get_trending_posts()
+    return analytics_service.get_trending_posts()
 
-@router.get("/followers/{user_id}")
-def get_followers(user_id: str):
-    return neo4j_repo.get_followers(user_id)
+@router.get("/user/{user_id}/summary")
+def user_engagement_summary(user_id: str):
+    return analytics_service.get_user_engagement_summary(user_id)
 
-@router.get("/following/{user_id}")
-def get_following(user_id: str):
-    return neo4j_repo.get_following(user_id)
+@router.get("/hashtag/{hashtag}")
+def hashtag_analytics(hashtag: str):
+    return analytics_service.get_hashtag_analytics(hashtag)
 
-@router.get("/suggestions/{user_id}")
-def get_suggestions(user_id: str):
-    return neo4j_repo.get_suggestions(user_id)
+@router.get("/network/{user_id}")
+def network_stats(user_id: str):
+    return analytics_service.get_network_stats(user_id)
