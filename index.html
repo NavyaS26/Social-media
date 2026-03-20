@@ -4,175 +4,200 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Social Media Analytics</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f5f4f0;
-      --surface: #ffffff;
-      --border: #e2e0d8;
-      --text: #1a1917;
-      --muted: #7a7870;
-      --accent: #2b5ce6;
-      --accent-light: #eef1fc;
-      --danger: #e63946;
-      --success: #2d9a5f;
-      --like: #e63946;
-      --share: #2b5ce6;
-      --view: #2d9a5f;
-      --mono: 'DM Mono', monospace;
-      --sans: 'DM Sans', sans-serif;
+      --bg: #f5f4f0; --surface: #fff; --border: #e2e0d8;
+      --text: #1a1917; --muted: #7a7870;
+      --accent: #2b5ce6; --accent-light: #eef1fc;
+      --danger: #e63946; --success: #2d9a5f;
+      --like: #e63946; --share: #2b5ce6; --view: #2d9a5f;
+      --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
       --radius: 10px;
     }
-
     body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
     .app-shell { display: flex; min-height: 100vh; }
 
-    .sidebar {
-      width: 220px; flex-shrink: 0; background: var(--surface);
-      border-right: 1px solid var(--border); display: flex;
-      flex-direction: column; padding: 28px 0 20px;
-      position: sticky; top: 0; height: 100vh;
-    }
-    .logo { padding: 0 24px 28px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-    .logo-mark { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-    .logo-title { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.2; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 24px; font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; border-left: 3px solid transparent; transition: all .15s; user-select: none; }
+    /* ── Sidebar ── */
+    .sidebar { width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .logo { padding: 0 24px 24px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+    .logo-mark { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+    .logo-title { font-size: 16px; font-weight: 600; line-height: 1.3; }
+    .nav-section { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 12px 24px 4px; }
+    .nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 24px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; border-left: 3px solid transparent; transition: all .15s; user-select: none; }
     .nav-item:hover { color: var(--text); background: var(--bg); }
     .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-light); }
-    .nav-icon { font-size: 16px; }
 
+    /* ── Main ── */
     .main { flex: 1; min-width: 0; }
-    .page { display: none; padding: 36px 40px; max-width: 900px; }
+    .page { display: none; padding: 32px 40px; max-width: 920px; }
     .page.active { display: block; }
-    .page-title { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
-    .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .page-title { font-size: 21px; font-weight: 600; margin-bottom: 4px; }
+    .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
 
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
-    .card-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
+    /* ── Cards ── */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
+    .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 12px; }
+    .card-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 
+    /* ── Forms ── */
     .form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-    .form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 160px; }
-    label { font-size: 12px; font-weight: 500; color: var(--muted); }
-    input, textarea, select { font-family: var(--sans); font-size: 14px; padding: 9px 12px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg); color: var(--text); outline: none; transition: border-color .15s; width: 100%; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
+    label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    input, textarea, select { font-family: var(--sans); font-size: 13px; padding: 8px 11px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg); color: var(--text); outline: none; transition: border-color .15s; width: 100%; }
     input:focus, textarea:focus, select:focus { border-color: var(--accent); background: var(--surface); }
-    textarea { resize: vertical; min-height: 80px; }
+    textarea { resize: vertical; min-height: 72px; }
 
-    .btn { font-family: var(--sans); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: 7px; border: none; cursor: pointer; transition: all .15s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+    /* ── Buttons ── */
+    .btn { font-family: var(--sans); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 7px; border: none; cursor: pointer; transition: all .15s; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
     .btn-primary { background: var(--accent); color: #fff; }
     .btn-primary:hover { background: #1e4dd0; }
     .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
     .btn-ghost:hover { background: var(--bg); color: var(--text); }
-    .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); font-size: 12px; padding: 5px 10px; }
+    .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); font-size: 11px; padding: 4px 9px; }
     .btn-danger:hover { background: var(--danger); color: #fff; }
     .btn-sm { font-size: 12px; padding: 6px 12px; }
 
-    .user-list { display: flex; flex-direction: column; gap: 10px; }
-    .user-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
-    .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    /* ── User cards ── */
+    .user-list { display: flex; flex-direction: column; gap: 9px; }
+    .user-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .avatar-sm { width: 26px; height: 26px; font-size: 11px; }
     .user-info { flex: 1; min-width: 0; }
-    .user-name { font-weight: 600; font-size: 14px; }
-    .user-email { font-size: 12px; color: var(--muted); }
-    .user-id { font-family: var(--mono); font-size: 10px; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 2px 7px; border-radius: 4px; cursor: pointer; transition: background .15s; }
-    .user-id:hover { background: var(--accent-light); color: var(--accent); }
+    .user-name { font-weight: 600; font-size: 13px; }
+    .user-email { font-size: 11px; color: var(--muted); }
+    .id-badge { font-family: var(--mono); font-size: 10px; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+    .id-badge:hover { background: var(--accent-light); color: var(--accent); }
 
-    .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
-    .post-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    /* ── Post cards ── */
+    .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; }
+    .post-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; flex-wrap: wrap; }
     .post-time { font-size: 11px; color: var(--muted); }
-    .post-content { font-size: 14px; line-height: 1.55; margin-bottom: 10px; }
-    .hashtag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-    .tag { font-size: 11px; font-weight: 500; padding: 3px 8px; background: var(--accent-light); color: var(--accent); border-radius: 20px; }
-    .post-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .action-btn { font-family: var(--sans); font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; background: var(--bg); color: var(--muted); transition: all .15s; }
+    .post-content { font-size: 13px; line-height: 1.6; margin-bottom: 9px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
+    .tag { font-size: 11px; font-weight: 500; padding: 2px 8px; background: var(--accent-light); color: var(--accent); border-radius: 20px; }
+    .post-actions { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+    .action-btn { font-family: var(--sans); font-size: 12px; font-weight: 500; padding: 4px 11px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; background: var(--bg); color: var(--muted); transition: all .15s; }
     .action-btn:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
-
-    .comment-section { border-top: 1px solid var(--border); margin-top: 12px; padding-top: 12px; }
-    .comment-title { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
-    .comment-item { font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .comment-section { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 10px; }
+    .comment-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 7px; }
+    .comment-item { font-size: 12px; padding: 5px 0; border-bottom: 1px solid var(--border); }
     .comment-item:last-child { border: none; }
-    .comment-user { font-weight: 600; font-size: 11px; color: var(--accent); }
-    .comment-form { display: flex; gap: 8px; margin-top: 10px; }
+    .comment-user { font-weight: 700; font-size: 11px; color: var(--accent); margin-right: 5px; }
+    .comment-form { display: flex; gap: 7px; margin-top: 9px; }
 
-    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-    .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
-    .stat-num { font-size: 28px; font-weight: 700; margin-bottom: 2px; }
-    .stat-label { font-size: 12px; color: var(--muted); }
+    /* ── Stats ── */
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+    .stat-num { font-size: 26px; font-weight: 700; margin-bottom: 2px; }
+    .stat-label { font-size: 11px; color: var(--muted); }
     .stat-box.likes .stat-num { color: var(--like); }
     .stat-box.shares .stat-num { color: var(--share); }
     .stat-box.views .stat-num { color: var(--view); }
 
-    .trending-list { display: flex; flex-direction: column; gap: 10px; }
-    .trending-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
-    .trending-rank { font-family: var(--mono); font-size: 20px; font-weight: 500; color: var(--muted); width: 28px; flex-shrink: 0; }
-    .trending-rank.top { color: var(--accent); }
+    /* ── Trending ── */
+    .trending-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .rank { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--muted); width: 26px; flex-shrink: 0; }
+    .rank.top { color: var(--accent); }
     .trending-info { flex: 1; min-width: 0; }
-    .trending-pid { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .trending-stats { display: flex; gap: 12px; }
-    .t-stat { font-size: 12px; font-weight: 500; }
-    .t-stat.l { color: var(--like); }
-    .t-stat.s { color: var(--share); }
-    .t-stat.v { color: var(--view); }
-    .trending-score { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--accent); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+    .trending-content { font-size: 13px; font-weight: 500; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .trending-pid { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+    .trending-stats { display: flex; gap: 10px; margin-top: 4px; }
+    .t-stat { font-size: 11px; font-weight: 600; }
+    .t-stat.l { color: var(--like); } .t-stat.s { color: var(--share); } .t-stat.v { color: var(--view); }
+    .score-badge { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent); background: var(--accent-light); padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
 
-    .follow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .mini-user { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    /* ── Summary table ── */
+    .summary-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .summary-table th { text-align: left; padding: 7px 10px; color: var(--muted); font-weight: 600; border-bottom: 2px solid var(--border); font-size: 11px; text-transform: uppercase; }
+    .summary-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+    .summary-table tr:last-child td { border: none; }
+    .summary-table tr:hover td { background: var(--bg); }
+
+    /* ── Network stats ── */
+    .network-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+    .mini-user { display: flex; align-items: center; gap: 7px; padding: 7px 0; border-bottom: 1px solid var(--border); }
     .mini-user:last-child { border: none; }
     .mini-name { font-size: 13px; font-weight: 600; flex: 1; }
     .mini-id { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+    .count-badge { font-family: var(--mono); font-size: 11px; background: var(--accent-light); color: var(--accent); padding: 2px 8px; border-radius: 20px; }
 
-    .toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transform: translateY(8px); transition: all .2s; pointer-events: none; }
+    /* ── Hashtag result ── */
+    .hashtag-result { background: var(--accent-light); border: 1px solid #c7d4f8; border-radius: var(--radius); padding: 16px; margin-top: 12px; }
+    .hashtag-name { font-size: 20px; font-weight: 700; color: var(--accent); margin-bottom: 10px; }
+
+    /* ── Toast ── */
+    .toast { position: fixed; bottom: 22px; right: 22px; padding: 11px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transform: translateY(8px); transition: all .2s; pointer-events: none; }
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { background: var(--success); color: #fff; }
     .toast.error   { background: var(--danger);  color: #fff; }
     .toast.info    { background: var(--accent);  color: #fff; }
 
-    .empty { text-align: center; padding: 32px; color: var(--muted); font-size: 14px; }
-    .loading { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+    .empty { text-align: center; padding: 28px; color: var(--muted); font-size: 13px; }
+    .loading { text-align: center; padding: 22px; color: var(--muted); font-size: 13px; }
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+    .flex-gap { display: flex; gap: 8px; }
   </style>
 </head>
 <body>
 <div class="app-shell">
+
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-mark">NoSQL Project</div>
       <div class="logo-title">Social Media<br>Analytics</div>
     </div>
-    <div class="nav-item active" data-page="users"><span class="nav-icon">👤</span> Users</div>
-    <div class="nav-item" data-page="posts"><span class="nav-icon">📝</span> Posts</div>
-    <div class="nav-item" data-page="engagement"><span class="nav-icon">💬</span> Engagement</div>
-    <div class="nav-item" data-page="analytics"><span class="nav-icon">📊</span> Analytics</div>
+
+    <div class="nav-section">Content</div>
+    <div class="nav-item active" data-page="users">👤 Users</div>
+    <div class="nav-item" data-page="posts">📝 Posts</div>
+
+    <div class="nav-section">Engagement</div>
+    <div class="nav-item" data-page="engagement">💬 Record Actions</div>
+    <div class="nav-item" data-page="post-stats">📈 Post Stats</div>
+
+    <div class="nav-section">Analytics</div>
+    <div class="nav-item" data-page="trending">🔥 Trending</div>
+    <div class="nav-item" data-page="hashtag-analytics">🏷️ Hashtag Analytics</div>
+    <div class="nav-item" data-page="user-summary">👁️ User Summary</div>
+    <div class="nav-item" data-page="network">🕸️ Network / Graph</div>
   </aside>
 
   <main class="main">
 
-    <!-- USERS PAGE -->
+    <!-- ══════════════════════════════════════════
+         USERS
+    ══════════════════════════════════════════ -->
     <div class="page active" id="page-users">
       <div class="page-title">Users</div>
-      <div class="page-sub">Create and manage user accounts · stored in MongoDB</div>
+      <div class="page-sub">Create users · stored in MongoDB · nodes created in Neo4j</div>
+
       <div class="card">
         <div class="card-title">Create User</div>
         <div class="form-row">
-          <div class="form-group"><label>Username</label><input id="u-username" type="text" placeholder="e.g. alice" /></div>
+          <div class="form-group"><label>Username</label><input id="u-username" placeholder="e.g. alice" /></div>
           <div class="form-group"><label>Email</label><input id="u-email" type="email" placeholder="alice@example.com" /></div>
-          <div class="form-group"><label>Bio</label><input id="u-bio" type="text" placeholder="Short bio..." /></div>
+          <div class="form-group"><label>Bio</label><input id="u-bio" placeholder="Short bio..." /></div>
         </div>
         <button class="btn btn-primary" onclick="createUser()">+ Create User</button>
       </div>
+
       <div class="card">
-        <div class="card-title">Follow / Unfollow · stored in Neo4j</div>
+        <div class="card-title">Follow / Unfollow · Neo4j</div>
         <div class="form-row">
-          <div class="form-group"><label>Follower User ID</label><input id="follow-from" type="text" placeholder="Paste user_id" /></div>
-          <div class="form-group"><label>Followee User ID</label><input id="follow-to" type="text" placeholder="Paste user_id" /></div>
+          <div class="form-group"><label>Follower User ID</label><input id="follow-from" placeholder="Paste user_id" /></div>
+          <div class="form-group"><label>Followee User ID</label><input id="follow-to" placeholder="Paste user_id" /></div>
         </div>
-        <div style="display:flex;gap:8px;">
+        <div class="flex-gap">
           <button class="btn btn-primary btn-sm" onclick="doFollow()">Follow</button>
           <button class="btn btn-ghost btn-sm" onclick="doUnfollow()">Unfollow</button>
         </div>
       </div>
+
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="card-row">
           <div class="card-title" style="margin:0">All Users</div>
           <button class="btn btn-ghost btn-sm" onclick="loadUsers()">↻ Refresh</button>
         </div>
@@ -180,39 +205,47 @@
       </div>
     </div>
 
-    <!-- POSTS PAGE -->
+    <!-- ══════════════════════════════════════════
+         POSTS
+    ══════════════════════════════════════════ -->
     <div class="page" id="page-posts">
       <div class="page-title">Posts</div>
-      <div class="page-sub">Create posts, browse by hashtag, add comments · stored in MongoDB</div>
+      <div class="page-sub">Create posts and comments · stored in MongoDB</div>
+
       <div class="card">
         <div class="card-title">Create Post</div>
         <div class="form-row">
-          <div class="form-group" style="min-width:200px"><label>Author User ID</label><input id="p-userid" type="text" placeholder="Paste user_id" /></div>
-          <div class="form-group" style="min-width:200px"><label>Hashtags (comma-separated)</label><input id="p-hashtags" type="text" placeholder="travel, food, tech" /></div>
+          <div class="form-group" style="min-width:200px"><label>Author User ID</label><input id="p-userid" placeholder="Paste user_id" /></div>
+          <div class="form-group" style="min-width:180px"><label>Hashtags (comma separated)</label><input id="p-hashtags" placeholder="tech, nosql, python" /></div>
         </div>
         <div class="form-group" style="margin-bottom:10px"><label>Content</label><textarea id="p-content" placeholder="What's on your mind?"></textarea></div>
-        <button class="btn btn-primary" onclick="createPost()">+ Post</button>
+        <button class="btn btn-primary" onclick="createPost()">+ Create Post</button>
       </div>
+
       <div class="card">
         <div class="card-title">Filter by Hashtag</div>
-        <div style="display:flex;gap:8px;">
-          <input id="search-tag" type="text" placeholder="e.g. tech" style="flex:1" />
+        <div class="flex-gap">
+          <input id="search-tag" placeholder="e.g. tech" style="flex:1" />
           <button class="btn btn-primary btn-sm" onclick="filterByHashtag()">Search</button>
           <button class="btn btn-ghost btn-sm" onclick="loadPosts()">Show All</button>
         </div>
       </div>
+
       <div id="posts-list"></div>
     </div>
 
-    <!-- ENGAGEMENT PAGE -->
+    <!-- ══════════════════════════════════════════
+         ENGAGEMENT — RECORD ACTIONS
+    ══════════════════════════════════════════ -->
     <div class="page" id="page-engagement">
-      <div class="page-title">Engagement</div>
-      <div class="page-sub">Record likes, shares, views · stored in Cassandra</div>
+      <div class="page-title">Record Engagement</div>
+      <div class="page-sub">Record likes, shares, views · written to Cassandra</div>
+
       <div class="card">
         <div class="card-title">Record Action</div>
         <div class="form-row">
-          <div class="form-group"><label>Post ID</label><input id="eng-postid" type="text" placeholder="Paste post_id" /></div>
-          <div class="form-group"><label>User ID</label><input id="eng-userid" type="text" placeholder="Paste user_id" /></div>
+          <div class="form-group"><label>Post ID</label><input id="eng-postid" placeholder="Paste post_id" /></div>
+          <div class="form-group"><label>User ID</label><input id="eng-userid" placeholder="Paste user_id" /></div>
           <div class="form-group"><label>Action</label>
             <select id="eng-action">
               <option value="like">👍 Like</option>
@@ -221,55 +254,109 @@
             </select>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="recordEngagement()">Record</button>
-      </div>
-      <div class="card">
-        <div class="card-title">Check Post Counts</div>
-        <div style="display:flex;gap:8px;">
-          <input id="count-postid" type="text" placeholder="Paste post_id" style="flex:1" />
-          <button class="btn btn-primary btn-sm" onclick="getEngagementCounts()">Get Counts</button>
-        </div>
-        <div id="eng-counts" style="margin-top:14px;"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Event History for Post</div>
-        <div style="display:flex;gap:8px;">
-          <input id="events-postid" type="text" placeholder="Paste post_id" style="flex:1" />
-          <button class="btn btn-primary btn-sm" onclick="getEngagementEvents()">Load Events</button>
-        </div>
-        <div id="eng-events" style="margin-top:14px;"></div>
+        <button class="btn btn-primary" onclick="recordEngagement()">Record Action</button>
       </div>
     </div>
 
-    <!-- ANALYTICS PAGE -->
-    <div class="page" id="page-analytics">
-      <div class="page-title">Analytics</div>
-      <div class="page-sub">Trending posts from Cassandra · Follow graph from Neo4j</div>
+    <!-- ══════════════════════════════════════════
+         POST STATS
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-post-stats">
+      <div class="page-title">Post Stats</div>
+      <div class="page-sub">View engagement counts and event history for a post · from Cassandra</div>
+
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-          <div class="card-title" style="margin:0">🔥 Trending Posts</div>
+        <div class="card-title">Engagement Counts</div>
+        <div class="flex-gap" style="margin-bottom:0">
+          <input id="count-postid" placeholder="Paste post_id" style="flex:1" />
+          <button class="btn btn-primary btn-sm" onclick="getEngagementCounts()">Get Counts</button>
+        </div>
+        <div id="eng-counts" style="margin-top:12px"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Event History</div>
+        <div class="flex-gap" style="margin-bottom:0">
+          <input id="events-postid" placeholder="Paste post_id" style="flex:1" />
+          <button class="btn btn-primary btn-sm" onclick="getEngagementEvents()">Load Events</button>
+        </div>
+        <div id="eng-events" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         TRENDING
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-trending">
+      <div class="page-title">🔥 Trending Posts</div>
+      <div class="page-sub">Score = (likes × 1) + (shares × 3) + (views × 0.1) · Cassandra + MongoDB</div>
+
+      <div class="card">
+        <div class="card-row">
+          <div class="card-title" style="margin:0">Ranked Posts</div>
           <button class="btn btn-ghost btn-sm" onclick="loadTrending()">↻ Refresh</button>
         </div>
-        <div id="trending-list" class="loading">Loading...</div>
+        <div id="trending-list"><div class="loading">Loading...</div></div>
       </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         HASHTAG ANALYTICS
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-hashtag-analytics">
+      <div class="page-title">Hashtag Analytics</div>
+      <div class="page-sub">Aggregated engagement across all posts with a hashtag · MongoDB + Cassandra</div>
+
       <div class="card">
-        <div class="card-title">Follow Graph · Neo4j</div>
-        <div class="form-row">
-          <div class="form-group"><label>User ID</label><input id="graph-userid" type="text" placeholder="Paste user_id" /></div>
+        <div class="card-title">Analyse a Hashtag</div>
+        <div class="flex-gap">
+          <input id="ha-tag" placeholder="e.g. tech" style="flex:1" />
+          <button class="btn btn-primary btn-sm" onclick="getHashtagAnalytics()">Analyse</button>
         </div>
-        <button class="btn btn-primary btn-sm" style="margin-bottom:16px" onclick="loadFollowGraph()">Load Graph</button>
-        <div class="follow-grid" id="follow-graph" style="display:none">
-          <div><div class="card-title">Followers</div><div id="followers-list"><div class="empty">—</div></div></div>
-          <div><div class="card-title">Following</div><div id="following-list"><div class="empty">—</div></div></div>
-        </div>
+        <div id="ha-result"></div>
       </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         USER ENGAGEMENT SUMMARY
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-user-summary">
+      <div class="page-title">User Engagement Summary</div>
+      <div class="page-sub">Per-post engagement breakdown for a user · MongoDB + Cassandra</div>
+
       <div class="card">
-        <div class="card-title">💡 Suggested Users (Friends of Friends) · Neo4j</div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;">
-          <input id="suggest-userid" type="text" placeholder="Paste user_id" style="flex:1" />
+        <div class="card-title">Load Summary</div>
+        <div class="flex-gap">
+          <input id="us-userid" placeholder="Paste user_id" style="flex:1" />
+          <button class="btn btn-primary btn-sm" onclick="getUserSummary()">Load</button>
+        </div>
+        <div id="us-result" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         NETWORK / GRAPH
+    ══════════════════════════════════════════ -->
+    <div class="page" id="page-network">
+      <div class="page-title">Network &amp; Graph</div>
+      <div class="page-sub">Followers · Following · Friend suggestions · all from Neo4j</div>
+
+      <div class="card">
+        <div class="card-title">Load Network Stats</div>
+        <div class="flex-gap">
+          <input id="net-userid" placeholder="Paste user_id" style="flex:1" />
+          <button class="btn btn-primary btn-sm" onclick="loadNetworkStats()">Load</button>
+        </div>
+        <div id="net-result"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💡 Friend Suggestions (Friends of Friends)</div>
+        <div class="flex-gap">
+          <input id="suggest-userid" placeholder="Paste user_id" style="flex:1" />
           <button class="btn btn-primary btn-sm" onclick="loadSuggestions()">Get Suggestions</button>
         </div>
-        <div id="suggestions-list"></div>
+        <div id="suggestions-list" style="margin-top:12px"></div>
       </div>
     </div>
 
@@ -281,6 +368,7 @@
 <script>
 const API = 'http://127.0.0.1:8000';
 
+// ── Helpers ────────────────────────────────────────────────
 function showToast(msg, type = 'success') {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -288,19 +376,7 @@ function showToast(msg, type = 'success') {
   setTimeout(() => t.className = 'toast', 2800);
 }
 
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    item.classList.add('active');
-    document.getElementById('page-' + item.dataset.page).classList.add('active');
-    if (item.dataset.page === 'users') loadUsers();
-    if (item.dataset.page === 'posts') loadPosts();
-    if (item.dataset.page === 'analytics') loadTrending();
-  });
-});
-
-async function api(path, options = {}) {
+async function apiFetch(path, options = {}) {
   const res = await fetch(API + path, { headers: { 'Content-Type': 'application/json' }, ...options });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.detail || `Error ${res.status}`);
@@ -312,42 +388,55 @@ function fmtDate(d) {
   return new Date(d).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => showToast('ID copied to clipboard!', 'info'));
+function copyId(id) {
+  navigator.clipboard.writeText(id).then(() => showToast('ID copied!', 'info'));
 }
 
-// ── USERS ──────────────────────────────────────
+function avatarLetter(str) { return (str || '?')[0].toUpperCase(); }
+
+// ── Navigation ─────────────────────────────────────────────
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById('page-' + item.dataset.page).classList.add('active');
+    const onLoad = { users: loadUsers, posts: loadPosts, trending: loadTrending };
+    if (onLoad[item.dataset.page]) onLoad[item.dataset.page]();
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+// USERS
+// ══════════════════════════════════════════════════════════
 async function loadUsers() {
   const el = document.getElementById('users-list');
   el.innerHTML = '<div class="loading">Loading...</div>';
   try {
-    const users = await api('/users/');
+    const users = await apiFetch('/users/');
     if (!users.length) { el.innerHTML = '<div class="empty">No users yet. Create one above.</div>'; return; }
     el.innerHTML = users.map(u => `
       <div class="user-card">
-        <div class="avatar">${u.username[0].toUpperCase()}</div>
+        <div class="avatar">${avatarLetter(u.username)}</div>
         <div class="user-info">
           <div class="user-name">${u.username}</div>
-          <div class="user-email">${u.email}</div>
-          ${u.bio ? `<div class="user-email">${u.bio}</div>` : ''}
+          <div class="user-email">${u.email}${u.bio ? ' · ' + u.bio : ''}</div>
         </div>
-        <span class="user-id" title="Click to copy full ID" onclick="copyToClipboard('${u.user_id}')">${u.user_id.slice(0,8)}… (copy)</span>
+        <span class="id-badge" title="Click to copy" onclick="copyId('${u.user_id}')">${u.user_id.slice(0,8)}… (copy)</span>
         <button class="btn btn-danger" onclick="deleteUser('${u.user_id}')">✕</button>
       </div>`).join('');
-  } catch(e) { el.innerHTML = `<div class="empty">Cannot reach backend. Is the server running?</div>`; }
+  } catch(e) { el.innerHTML = `<div class="empty">Cannot reach backend. Is uvicorn running?</div>`; }
 }
 
 async function createUser() {
   const username = document.getElementById('u-username').value.trim();
   const email    = document.getElementById('u-email').value.trim();
   const bio      = document.getElementById('u-bio').value.trim();
-  if (!username || !email) return showToast('Username and email are required', 'error');
+  if (!username || !email) return showToast('Username and email required', 'error');
   try {
-    await api('/users/', { method: 'POST', body: JSON.stringify({ username, email, bio }) });
+    await apiFetch('/users/', { method: 'POST', body: JSON.stringify({ username, email, bio }) });
     showToast(`User "${username}" created!`);
-    document.getElementById('u-username').value = '';
-    document.getElementById('u-email').value = '';
-    document.getElementById('u-bio').value = '';
+    ['u-username','u-email','u-bio'].forEach(id => document.getElementById(id).value = '');
     loadUsers();
   } catch(e) { showToast(e.message, 'error'); }
 }
@@ -355,90 +444,87 @@ async function createUser() {
 async function deleteUser(id) {
   if (!confirm('Delete this user?')) return;
   try {
-    await api(`/users/${id}`, { method: 'DELETE' });
-    showToast('User deleted');
-    loadUsers();
+    await apiFetch(`/users/${id}`, { method: 'DELETE' });
+    showToast('User deleted'); loadUsers();
   } catch(e) { showToast(e.message, 'error'); }
 }
 
 async function doFollow() {
   const follower_id = document.getElementById('follow-from').value.trim();
   const followee_id = document.getElementById('follow-to').value.trim();
-  if (!follower_id || !followee_id) return showToast('Both User IDs required', 'error');
+  if (!follower_id || !followee_id) return showToast('Both IDs required', 'error');
   try {
-    await api('/users/follow', { method: 'POST', body: JSON.stringify({ follower_id, followee_id }) });
-    showToast('Follow relationship created in Neo4j!');
+    await apiFetch('/users/follow', { method: 'POST', body: JSON.stringify({ follower_id, followee_id }) });
+    showToast('Follow saved to Neo4j!');
   } catch(e) { showToast(e.message, 'error'); }
 }
 
 async function doUnfollow() {
   const follower_id = document.getElementById('follow-from').value.trim();
   const followee_id = document.getElementById('follow-to').value.trim();
-  if (!follower_id || !followee_id) return showToast('Both User IDs required', 'error');
+  if (!follower_id || !followee_id) return showToast('Both IDs required', 'error');
   try {
-    await api('/users/unfollow', { method: 'POST', body: JSON.stringify({ follower_id, followee_id }) });
+    await apiFetch('/users/unfollow', { method: 'POST', body: JSON.stringify({ follower_id, followee_id }) });
     showToast('Unfollowed');
   } catch(e) { showToast(e.message, 'error'); }
 }
 
-// ── POSTS ──────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// POSTS
+// ══════════════════════════════════════════════════════════
 async function loadPosts(url = '/posts/') {
   const el = document.getElementById('posts-list');
   el.innerHTML = '<div class="loading">Loading...</div>';
   try {
-    const posts = await api(url);
-    renderPosts(posts, el);
+    const posts = await apiFetch(url);
+    if (!posts.length) { el.innerHTML = '<div class="empty">No posts found.</div>'; return; }
+    el.innerHTML = posts.map(p => `
+      <div class="post-card">
+        <div class="post-meta">
+          <div class="avatar avatar-sm">${avatarLetter(p.user_id)}</div>
+          <span class="id-badge" onclick="copyId('${p.post_id}')" title="Click to copy post_id">post: ${p.post_id.slice(0,10)}… (copy)</span>
+          <span class="post-time">${fmtDate(p.created_at)}</span>
+        </div>
+        <div class="post-content">${p.content}</div>
+        ${p.hashtags?.length ? `<div class="tags">${p.hashtags.map(h=>`<span class="tag">#${h}</span>`).join('')}</div>` : ''}
+        <div class="post-actions">
+          <button class="action-btn" onclick="quickEngage('${p.post_id}','like')">👍 Like</button>
+          <button class="action-btn" onclick="quickEngage('${p.post_id}','share')">🔁 Share</button>
+          <button class="action-btn" onclick="quickEngage('${p.post_id}','view')">👁 View</button>
+          <button class="action-btn" onclick="toggleComments('${p.post_id}')">💬 ${p.comments?.length||0} Comments</button>
+          <button class="btn btn-danger" style="margin-left:auto" onclick="deletePost('${p.post_id}')">✕</button>
+        </div>
+        <div class="comment-section" id="comments-${p.post_id}" style="display:none">
+          <div class="comment-title">Comments</div>
+          ${(p.comments||[]).map(c=>`
+            <div class="comment-item">
+              <span class="comment-user">${c.user_id.slice(0,8)}</span>${c.text}
+              <span style="font-size:10px;color:var(--muted);margin-left:5px">${fmtDate(c.created_at)}</span>
+            </div>`).join('')||'<div style="color:var(--muted);font-size:12px;padding:4px 0">No comments yet</div>'}
+          <div class="comment-form">
+            <input type="text" placeholder="Your user_id" id="cuid-${p.post_id}" style="max-width:150px" />
+            <input type="text" placeholder="Write a comment…" id="ctxt-${p.post_id}" style="flex:1" />
+            <button class="btn btn-primary btn-sm" onclick="addComment('${p.post_id}')">Send</button>
+          </div>
+        </div>
+      </div>`).join('');
   } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
 }
 
-function renderPosts(posts, el) {
-  if (!posts.length) { el.innerHTML = '<div class="empty">No posts found.</div>'; return; }
-  el.innerHTML = posts.map(p => `
-    <div class="post-card">
-      <div class="post-meta">
-        <div class="avatar" style="width:28px;height:28px;font-size:11px">${p.user_id[0].toUpperCase()}</div>
-        <span style="font-size:11px;cursor:pointer;color:var(--accent);font-weight:600" title="Click to copy post_id" onclick="copyToClipboard('${p.post_id}')">post: ${p.post_id.slice(0,12)}… (copy)</span>
-        <span class="post-time">${fmtDate(p.created_at)}</span>
-      </div>
-      <div class="post-content">${p.content}</div>
-      ${p.hashtags?.length ? `<div class="hashtag-list">${p.hashtags.map(h=>`<span class="tag">#${h}</span>`).join('')}</div>` : ''}
-      <div class="post-actions">
-        <button class="action-btn" onclick="quickEngage('${p.post_id}','like')">👍 Like</button>
-        <button class="action-btn" onclick="quickEngage('${p.post_id}','share')">🔁 Share</button>
-        <button class="action-btn" onclick="quickEngage('${p.post_id}','view')">👁 View</button>
-        <button class="action-btn" onclick="toggleComments('${p.post_id}')">💬 Comments (${p.comments?.length||0})</button>
-        <button class="btn btn-danger" style="margin-left:auto" onclick="deletePost('${p.post_id}')">✕</button>
-      </div>
-      <div class="comment-section" id="comments-${p.post_id}" style="display:none">
-        <div class="comment-title">Comments</div>
-        ${(p.comments||[]).map(c=>`
-          <div class="comment-item">
-            <span class="comment-user">${c.user_id.slice(0,8)}</span> ${c.text}
-            <span style="font-size:10px;color:var(--muted);margin-left:6px">${fmtDate(c.created_at)}</span>
-          </div>`).join('')||'<div style="color:var(--muted);font-size:12px;padding:4px 0">No comments yet</div>'}
-        <div class="comment-form">
-          <input type="text" placeholder="Your user_id" id="cuid-${p.post_id}" style="max-width:160px" />
-          <input type="text" placeholder="Write a comment…" id="ctxt-${p.post_id}" style="flex:1" />
-          <button class="btn btn-primary btn-sm" onclick="addComment('${p.post_id}')">Send</button>
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-function toggleComments(postId) {
-  const el = document.getElementById('comments-' + postId);
+function toggleComments(id) {
+  const el = document.getElementById('comments-' + id);
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 async function createPost() {
   const user_id  = document.getElementById('p-userid').value.trim();
   const content  = document.getElementById('p-content').value.trim();
-  const tagsRaw  = document.getElementById('p-hashtags').value.trim();
-  const hashtags = tagsRaw ? tagsRaw.split(',').map(t=>t.trim()).filter(Boolean) : [];
+  const raw      = document.getElementById('p-hashtags').value.trim();
+  const hashtags = raw ? raw.split(',').map(t=>t.trim()).filter(Boolean) : [];
   if (!user_id || !content) return showToast('User ID and content required', 'error');
   try {
-    await api('/posts/', { method: 'POST', body: JSON.stringify({ user_id, content, hashtags }) });
-    showToast('Post created and saved to MongoDB!');
+    await apiFetch('/posts/', { method: 'POST', body: JSON.stringify({ user_id, content, hashtags }) });
+    showToast('Post saved to MongoDB!');
     document.getElementById('p-content').value = '';
     document.getElementById('p-hashtags').value = '';
     loadPosts();
@@ -454,41 +540,43 @@ async function filterByHashtag() {
 async function deletePost(id) {
   if (!confirm('Delete this post?')) return;
   try {
-    await api(`/posts/${id}`, { method: 'DELETE' });
-    showToast('Post deleted');
-    loadPosts();
+    await apiFetch(`/posts/${id}`, { method: 'DELETE' });
+    showToast('Post deleted'); loadPosts();
   } catch(e) { showToast(e.message, 'error'); }
 }
 
 async function addComment(postId) {
   const user_id = document.getElementById('cuid-' + postId).value.trim();
   const text    = document.getElementById('ctxt-' + postId).value.trim();
-  if (!user_id || !text) return showToast('User ID and comment text required', 'error');
+  if (!user_id || !text) return showToast('User ID and comment required', 'error');
   try {
-    await api(`/posts/${postId}/comments`, { method: 'POST', body: JSON.stringify({ user_id, text }) });
-    showToast('Comment saved to MongoDB!');
-    loadPosts();
+    await apiFetch(`/posts/${postId}/comments`, { method: 'POST', body: JSON.stringify({ user_id, text }) });
+    showToast('Comment added!'); loadPosts();
   } catch(e) { showToast(e.message, 'error'); }
 }
 
 async function quickEngage(post_id, action_type) {
-  const user_id = prompt(`Enter your user_id to ${action_type} this post:`);
+  const user_id = prompt(`Enter your user_id to ${action_type}:`);
   if (!user_id) return;
   try {
-    await api(`/engagement/${post_id}`, { method: 'POST', body: JSON.stringify({ user_id, action_type }) });
+    await apiFetch(`/engagement/${post_id}`, { method: 'POST', body: JSON.stringify({ user_id, action_type }) });
     showToast(`${action_type} saved to Cassandra!`);
   } catch(e) { showToast(e.message, 'error'); }
 }
 
-// ── ENGAGEMENT ─────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// ENGAGEMENT
+// ══════════════════════════════════════════════════════════
 async function recordEngagement() {
   const post_id     = document.getElementById('eng-postid').value.trim();
   const user_id     = document.getElementById('eng-userid').value.trim();
   const action_type = document.getElementById('eng-action').value;
   if (!post_id || !user_id) return showToast('Post ID and User ID required', 'error');
   try {
-    await api(`/engagement/${post_id}`, { method: 'POST', body: JSON.stringify({ user_id, action_type }) });
-    showToast(`${action_type} recorded in Cassandra!`);
+    await apiFetch(`/engagement/${post_id}`, { method: 'POST', body: JSON.stringify({ user_id, action_type }) });
+    showToast(`${action_type} saved to Cassandra!`);
+    document.getElementById('eng-postid').value = '';
+    document.getElementById('eng-userid').value = '';
   } catch(e) { showToast(e.message, 'error'); }
 }
 
@@ -497,14 +585,14 @@ async function getEngagementCounts() {
   if (!post_id) return showToast('Enter a Post ID', 'error');
   const el = document.getElementById('eng-counts');
   try {
-    const d = await api(`/engagement/${post_id}/counts`);
+    const d = await apiFetch(`/engagement/${post_id}/counts`);
     el.innerHTML = `
       <div class="stat-grid">
         <div class="stat-box likes"><div class="stat-num">${d.likes}</div><div class="stat-label">Likes</div></div>
         <div class="stat-box shares"><div class="stat-num">${d.shares}</div><div class="stat-label">Shares</div></div>
         <div class="stat-box views"><div class="stat-num">${d.views}</div><div class="stat-label">Views</div></div>
       </div>`;
-  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message, 'error'); }
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message,'error'); }
 }
 
 async function getEngagementEvents() {
@@ -512,35 +600,34 @@ async function getEngagementEvents() {
   if (!post_id) return showToast('Enter a Post ID', 'error');
   const el = document.getElementById('eng-events');
   try {
-    const events = await api(`/engagement/${post_id}/events`);
-    if (!events.length) { el.innerHTML = '<div class="empty">No events recorded yet.</div>'; return; }
-    el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <thead><tr style="border-bottom:1px solid var(--border);color:var(--muted)">
-        <th style="padding:6px 8px;text-align:left">Action</th>
-        <th style="padding:6px 8px;text-align:left">User</th>
-        <th style="padding:6px 8px;text-align:left">Time</th>
-      </tr></thead>
+    const events = await apiFetch(`/engagement/${post_id}/events`);
+    if (!events.length) { el.innerHTML = '<div class="empty">No events yet.</div>'; return; }
+    el.innerHTML = `<table class="summary-table">
+      <thead><tr><th>Action</th><th>User</th><th>Time</th></tr></thead>
       <tbody>${events.map(e=>`
-        <tr style="border-bottom:1px solid var(--border)">
-          <td style="padding:6px 8px;font-weight:600;color:${e.action_type==='like'?'var(--like)':e.action_type==='share'?'var(--share)':'var(--view)'}">${e.action_type}</td>
-          <td style="padding:6px 8px;font-family:var(--mono);font-size:11px">${e.user_id.slice(0,14)}…</td>
-          <td style="padding:6px 8px;color:var(--muted)">${fmtDate(e.created_at)}</td>
+        <tr>
+          <td style="font-weight:700;color:${e.action_type==='like'?'var(--like)':e.action_type==='share'?'var(--share)':'var(--view)'}">${e.action_type}</td>
+          <td style="font-family:var(--mono);font-size:11px">${e.user_id.slice(0,14)}…</td>
+          <td style="color:var(--muted)">${fmtDate(e.created_at)}</td>
         </tr>`).join('')}
       </tbody></table>`;
-  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message, 'error'); }
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message,'error'); }
 }
 
-// ── ANALYTICS ──────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// TRENDING
+// ══════════════════════════════════════════════════════════
 async function loadTrending() {
   const el = document.getElementById('trending-list');
-  el.innerHTML = '<div class="loading">Loading from Cassandra...</div>';
+  el.innerHTML = '<div class="loading">Loading from Cassandra + MongoDB...</div>';
   try {
-    const posts = await api('/analytics/trending');
+    const posts = await apiFetch('/analytics/trending');
     if (!posts.length) { el.innerHTML = '<div class="empty">No engagement data yet. Record some likes/shares/views first.</div>'; return; }
-    el.innerHTML = `<div class="trending-list">${posts.map((p,i)=>`
+    el.innerHTML = posts.map((p, i) => `
       <div class="trending-item">
-        <div class="trending-rank ${i<3?'top':''}">#${i+1}</div>
+        <div class="rank ${i < 3 ? 'top' : ''}">#${i+1}</div>
         <div class="trending-info">
+          <div class="trending-content">${p.content || '—'}</div>
           <div class="trending-pid">${p.post_id}</div>
           <div class="trending-stats">
             <span class="t-stat l">👍 ${p.likes}</span>
@@ -548,26 +635,99 @@ async function loadTrending() {
             <span class="t-stat v">👁 ${p.views}</span>
           </div>
         </div>
-        <div class="trending-score">score: ${p.trending_score}</div>
-      </div>`).join('')}</div>`;
+        <div class="score-badge">score: ${p.trending_score}</div>
+      </div>`).join('');
   } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
 }
 
-async function loadFollowGraph() {
-  const user_id = document.getElementById('graph-userid').value.trim();
-  if (!user_id) return showToast('Enter a User ID', 'error');
+// ══════════════════════════════════════════════════════════
+// HASHTAG ANALYTICS
+// ══════════════════════════════════════════════════════════
+async function getHashtagAnalytics() {
+  const tag = document.getElementById('ha-tag').value.trim();
+  if (!tag) return showToast('Enter a hashtag', 'error');
+  const el = document.getElementById('ha-result');
+  el.innerHTML = '<div class="loading">Loading...</div>';
   try {
-    const [followers, following] = await Promise.all([
-      api(`/analytics/followers/${user_id}`),
-      api(`/analytics/following/${user_id}`)
-    ]);
-    document.getElementById('follow-graph').style.display = 'grid';
-    const renderList = items => items.length
-      ? items.map(u=>`<div class="mini-user"><div class="avatar" style="width:28px;height:28px;font-size:11px">${u.username[0].toUpperCase()}</div><span class="mini-name">${u.username}</span><span class="mini-id">${u.user_id.slice(0,8)}</span></div>`).join('')
-      : '<div class="empty">None</div>';
-    document.getElementById('followers-list').innerHTML = renderList(followers);
-    document.getElementById('following-list').innerHTML = renderList(following);
-  } catch(e) { showToast(e.message, 'error'); }
+    const d = await apiFetch(`/analytics/hashtag/${encodeURIComponent(tag)}`);
+    el.innerHTML = `
+      <div class="hashtag-result">
+        <div class="hashtag-name">#${d.hashtag}</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-num" style="color:var(--text)">${d.total_posts}</div><div class="stat-label">Posts</div></div>
+          <div class="stat-box likes"><div class="stat-num">${d.total_likes}</div><div class="stat-label">Total Likes</div></div>
+          <div class="stat-box shares"><div class="stat-num">${d.total_shares}</div><div class="stat-label">Total Shares</div></div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-box views"><div class="stat-num">${d.total_views}</div><div class="stat-label">Total Views</div></div>
+          <div class="stat-box" style="grid-column:span 2"><div class="stat-num" style="color:var(--accent)">${d.trending_score}</div><div class="stat-label">Trending Score</div></div>
+        </div>
+      </div>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message,'error'); }
+}
+
+// ══════════════════════════════════════════════════════════
+// USER ENGAGEMENT SUMMARY
+// ══════════════════════════════════════════════════════════
+async function getUserSummary() {
+  const user_id = document.getElementById('us-userid').value.trim();
+  if (!user_id) return showToast('Enter a User ID', 'error');
+  const el = document.getElementById('us-result');
+  el.innerHTML = '<div class="loading">Loading from MongoDB + Cassandra...</div>';
+  try {
+    const rows = await apiFetch(`/analytics/user/${user_id}/summary`);
+    if (!rows.length) { el.innerHTML = '<div class="empty">No posts found for this user.</div>'; return; }
+    el.innerHTML = `<table class="summary-table">
+      <thead><tr><th>Post</th><th>👍 Likes</th><th>🔁 Shares</th><th>👁 Views</th></tr></thead>
+      <tbody>${rows.map(r=>`
+        <tr>
+          <td>
+            <div style="font-size:12px;font-weight:600;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.content}</div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--muted)">${r.post_id}</div>
+          </td>
+          <td style="font-weight:700;color:var(--like)">${r.likes}</td>
+          <td style="font-weight:700;color:var(--share)">${r.shares}</td>
+          <td style="font-weight:700;color:var(--view)">${r.views}</td>
+        </tr>`).join('')}
+      </tbody></table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message,'error'); }
+}
+
+// ══════════════════════════════════════════════════════════
+// NETWORK / GRAPH
+// ══════════════════════════════════════════════════════════
+async function loadNetworkStats() {
+  const user_id = document.getElementById('net-userid').value.trim();
+  if (!user_id) return showToast('Enter a User ID', 'error');
+  const el = document.getElementById('net-result');
+  el.innerHTML = '<div class="loading">Loading from Neo4j...</div>';
+  try {
+    const d = await apiFetch(`/analytics/network/${user_id}`);
+    const renderList = (items) => items.length
+      ? items.map(u=>`
+          <div class="mini-user">
+            <div class="avatar avatar-sm">${avatarLetter(u.username)}</div>
+            <span class="mini-name">${u.username}</span>
+            <span class="mini-id">${u.user_id.slice(0,8)}</span>
+          </div>`).join('')
+      : '<div style="color:var(--muted);font-size:12px;padding:8px 0">None</div>';
+
+    el.innerHTML = `
+      <div style="display:flex;gap:12px;margin:12px 0">
+        <span class="count-badge">${d.followers_count} Followers</span>
+        <span class="count-badge">${d.following_count} Following</span>
+      </div>
+      <div class="network-grid">
+        <div>
+          <div class="card-title">Followers</div>
+          ${renderList(d.followers)}
+        </div>
+        <div>
+          <div class="card-title">Following</div>
+          ${renderList(d.following)}
+        </div>
+      </div>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message,'error'); }
 }
 
 async function loadSuggestions() {
@@ -575,16 +735,17 @@ async function loadSuggestions() {
   if (!user_id) return showToast('Enter a User ID', 'error');
   const el = document.getElementById('suggestions-list');
   try {
-    const sugg = await api(`/analytics/suggestions/${user_id}`);
+    const sugg = await apiFetch(`/analytics/suggestions/${user_id}`);
     if (!sugg.length) { el.innerHTML = '<div class="empty">No suggestions — follow more people first!</div>'; return; }
     el.innerHTML = sugg.map(u=>`
       <div class="mini-user" style="padding:10px 0;border-bottom:1px solid var(--border)">
-        <div class="avatar">${u.username[0].toUpperCase()}</div>
+        <div class="avatar">${avatarLetter(u.username)}</div>
         <div><div class="mini-name">${u.username}</div><div class="mini-id">${u.user_id}</div></div>
       </div>`).join('');
-  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message, 'error'); }
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; showToast(e.message,'error'); }
 }
 
+// ── Init
 loadUsers();
 </script>
 </body>
